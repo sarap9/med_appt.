@@ -1,27 +1,13 @@
 const mongoose = require('mongoose');
-const mongoURI =  "mongodb://root:<your-password>@127.0.0.1:27017";
 
-const connectToMongo = async (retryCount) => {
-    const MAX_RETRIES = 3;
-    const count = retryCount ?? 0;
+const mongoURI = "mongodb://root:xkCM0Hx5nfdb2th819NC67lH@172.21.1.1:27017/med_appt?authSource=admin";
+
+const connectToMongo = async () => {
     try {
-        await mongoose.connect(mongoURI, { dbName: 'stayhealthybeta1'});
-        console.info('Connected to Mongo Successfully')
-
-        return;
+        await mongoose.connect(mongoURI);
+        console.log("Connected to Mongo Successfully");
     } catch (error) {
-        console.error(error);
-
-        const nextRetryCount = count + 1;
-
-        if (nextRetryCount >= MAX_RETRIES) {
-            throw new Error('Unable to connect to Mongo!');
-        }
-
-        console.info(`Retrying, retry count: ${nextRetryCount}`)
-
-        return await connectToMongo(nextRetryCount);
-
+        console.error("Error connecting to Mongo:", error);
     }
 };
 
