@@ -1,0 +1,7 @@
+.navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background-color: #2c3e50; color: white; }
+.navbar-brand a { color: white; font-size: 22px; font-weight: bold; text-decoration: none; }
+.navbar-links { display: flex; list-style: none; gap: 20px; align-items: center; margin: 0; padding: 0; }
+.navbar-links a { color: white; text-decoration: none; font-weight: 500; }
+.btn-nav { padding: 6px 12px; border: 1px solid white; border-radius: 4px; }
+.btn-logout { background-color: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+.welcome-text { color: #f1c40f; font-weight: bold; }
