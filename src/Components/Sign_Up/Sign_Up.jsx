@@ -1,79 +1,122 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Sign_Up.css';
-import { Link, useNavigate } from 'react-router-dom';
-import { API_URL } from '../../config';
 
 const Sign_Up = () => {
-    const [role, setRole] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [showerr, setShowerr] = useState('');
+
     const navigate = useNavigate();
 
     const register = async (e) => {
         e.preventDefault();
-        if (phone.length !== 10) {
-            setShowerr('Phone number must be exactly 10 digits.');
+
+        // Validaciones
+        if (!name || !email || !phone || !password) {
+            setShowerr("Por favor completa todos los campos.");
             return;
         }
+
+        if (phone.length !== 10) {
+            setShowerr("El teléfono debe tener exactamente 10 dígitos.");
+            return;
+        }
+
+        if (password.length < 6) {
+            setShowerr("La contraseña debe tener al menos 6 caracteres.");
+            return;
+        }
+
+        setShowerr("");
+
         try {
-            const response = await fetch(`${API_URL}/api/auth/register`, {
+            const response = await fetch("http://localhost:8080/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ role, name, email, password, phone }),
+                body: JSON.stringify({ name, email, phone, password }),
             });
+
             const json = await response.json();
+
             if (json.authtoken) {
                 sessionStorage.setItem("auth-token", json.authtoken);
                 sessionStorage.setItem("name", name);
-                sessionStorage.setItem("phone", phone);
                 sessionStorage.setItem("email", email);
+                sessionStorage.setItem("phone", phone);
                 navigate("/");
                 window.location.reload();
             } else {
-                setShowerr(json.error || 'Error en el registro');
+                setShowerr(json.errors ? json.errors[0].msg : (json.error || "Error al registrarse"));
             }
         } catch (err) {
-            setShowerr('Error conectando con el servidor');
+            setShowerr("No se pudo conectar con el servidor.");
         }
     };
 
     return (
         <div className="container" style={{ marginTop: '5%' }}>
             <div className="signup-grid">
-                <h1>Sign Up</h1>
-                <div className="signup-text1">
-                    Already a member? <Link to="/login" style={{ color: '#2196f3' }}>Login</Link>
+                <div className="signup-form">
+                    <h2>Sign Up</h2>
+                    {showerr && <div className="err" style={{ color: 'red', marginBottom: '10px' }}>{showerr}</div>}
+                    <form onSubmit={register}>
+                        <div className="form-group">
+                            <label htmlFor="name">Name</label>
+                            <input
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                type="text"
+                                id="name"
+                                className="form-control"
+                                placeholder="Enter your name"
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="phone">Phone</label>
+                            <input
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                                type="tel"
+                                id="phone"
+                                className="form-control"
+                                placeholder="Enter your 10 digit phone number"
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="email">Email</label>
+                            <input
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                type="email"
+                                id="email"
+                                className="form-control"
+                                placeholder="Enter your email"
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="password">Password</label>
+                            <input
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                type="password"
+                                id="password"
+                                className="form-control"
+                                placeholder="Enter your password"
+                                required
+                            />
+                        </div>
+                        <div className="btn-group">
+                            <button type="submit" className="btn btn-primary mb-2 mr-1">Submit</button>
+                            <button type="reset" onClick={() => { setName(''); setEmail(''); setPhone(''); setPassword(''); setShowerr(''); }} className="btn btn-danger mb-2">Reset</button>
+                        </div>
+                    </form>
                 </div>
-                <form onSubmit={register} className="signup-form">
-                    <div className="form-group">
-                        <label>Role</label>
-                        <input value={role} onChange={(e) => setRole(e.target.value)} type="text" className="form-control" required />
-                    </div>
-                    <div className="form-group">
-                        <label>Name</label>
-                        <input value={name} onChange={(e) => setName(e.target.value)} type="text" className="form-control" required />
-                    </div>
-                    <div className="form-group">
-                        <label>Phone</label>
-                        <input value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" className="form-control" maxLength="10" required />
-                    </div>
-                    <div className="form-group">
-                        <label>Email</label>
-                        <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="form-control" required />
-                    </div>
-                    <div className="form-group">
-                        <label>Password</label>
-                        <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" className="form-control" required />
-                    </div>
-                    {showerr && <div style={{ color: 'red', marginTop: '10px' }}>{showerr}</div>}
-                    <div className="btn-group">
-                        <button type="submit" className="btn btn-primary">Submit</button>
-                        <button type="reset" className="btn btn-danger" onClick={() => { setRole(''); setName(''); setEmail(''); setPhone(''); setPassword(''); setShowerr(''); }}>Reset</button>
-                    </div>
-                </form>
             </div>
         </div>
     );
