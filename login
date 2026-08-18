@@ -1,0 +1,16 @@
+curl -i -X POST http://localhost:8181/api/auth/login \
+-H "Content-Type: application/json" \
+-d '{
+  "email": "johndoe@example.com",
+  "password": "yourpassword"
+}'
+
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: *
+Content-Type: application/json; charset=utf-8
+ETag: W/"b0-koAQAgPVJOI1bMs5GdHMK6Uevyg"
+Date: Tue, 18 Aug 2026 00:33:10 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"authtoken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNmE4M2E4NDY0MTZiODVkN2ZjZWZkYmQzIn0sImlhdCI6MTc4NzAxMzE5MH0.BxZI0foB_XCg_vNzoLcFYllbGtn-51l5Th4WnAwMGNQ"}
