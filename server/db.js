@@ -1,14 +1,16 @@
 const mongoose = require('mongoose');
 
-const mongoURI = "mongodb://root:xkCM0Hx5nfdb2th819NC67lH@172.21.1.1:27017/med_appt?authSource=admin";
+const mongoURI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/med_appt";
 
-const connectToMongo = async () => {
-    try {
-        await mongoose.connect(mongoURI);
+const connectToMongo = () => {
+    mongoose.connect(mongoURI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    }).then(() => {
         console.log("Connected to Mongo Successfully");
-    } catch (error) {
-        console.error("Error connecting to Mongo:", error);
-    }
-};
+    }).catch((err) => {
+        console.error("Error connecting to Mongo:", err);
+    });
+}
 
 module.exports = connectToMongo;
