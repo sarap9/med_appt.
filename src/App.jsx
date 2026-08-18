@@ -1,10 +1,17 @@
 import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import InstantConsultation from './Components/InstantConsultationBooking/InstantConsultation';
+import 'reactjs-popup/dist/index.css';
 
 function App() {
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>¡React está funcionando correctamente!</h1>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <Routes>
+          <Route path="/instant-consultation" element={<InstantConsultation />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
