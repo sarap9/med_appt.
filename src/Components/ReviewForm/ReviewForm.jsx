@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './ReviewForm.css';
 
 function ReviewForm({ doctorsData }) {
-  // Datos por defecto en caso de no recibir la prop doctorsData
   const initialDoctors = doctorsData || [
     { id: 1, name: 'Dr. Denis Raj', specialty: 'Dentist' },
     { id: 2, name: 'Dr. Michael Smith', specialty: 'General Physician' },
