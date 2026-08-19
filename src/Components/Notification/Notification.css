@@ -1,0 +1,71 @@
+.appointment-card {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-left: 6px solid #1a73e8;
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  width: 320px;
+  font-family: Arial, sans-serif;
+  animation: slideUp 0.3s ease-out;
+}
+
+.appointment-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.appointment-card__title {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #1a73e8;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 8px;
+}
+
+.appointment-card__message {
+  margin: 2px 0;
+  font-size: 0.9rem;
+  color: #333333;
+  line-height: 1.4;
+}
+
+.appointment-card__message strong {
+  color: #555555;
+}
+
+.cancel-appointment-btn {
+  margin-top: 14px;
+  width: 100%;
+  padding: 10px;
+  background-color: #d32f2f;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.cancel-appointment-btn:hover {
+  background-color: #b71c1c;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
