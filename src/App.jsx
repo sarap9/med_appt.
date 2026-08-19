@@ -6,6 +6,13 @@ import ReviewForm from './Components/ReviewForm/ReviewForm';
 import 'reactjs-popup/dist/index.css';
 
 function App() {
+  // Datos contextuales de doctores para la integración del ReviewForm
+  const doctorsData = [
+    { id: 1, name: 'Dr. Denis Raj', specialty: 'Dentist' },
+    { id: 2, name: 'Dr. Michael Smith', specialty: 'General Physician' },
+    { id: 3, name: 'Dr. Laura Taylor', specialty: 'General Physician' }
+  ];
+
   return (
     <BrowserRouter>
       <Notification>
@@ -16,7 +23,7 @@ function App() {
               element={
                 <>
                   <InstantConsultation />
-                  <ReviewForm />
+                  <ReviewForm doctorsData={doctorsData} />
                 </>
               }
             />
@@ -25,11 +32,11 @@ function App() {
               element={
                 <>
                   <InstantConsultation />
-                  <ReviewForm />
+                  <ReviewForm doctorsData={doctorsData} />
                 </>
               }
             />
-            <Route path="/reviews" element={<ReviewForm />} />
+            <Route path="/reviews" element={<ReviewForm doctorsData={doctorsData} />} />
           </Routes>
         </div>
       </Notification>

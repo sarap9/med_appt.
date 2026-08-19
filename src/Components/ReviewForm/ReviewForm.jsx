@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
 import './ReviewForm.css';
 
-function ReviewForm() {
-  const [showForm, setShowForm] = useState(false);
-  const [submittedMessage, setSubmittedMessage] = useState(null);
+function ReviewForm({ doctorsData }) {
+  // Datos por defecto en caso de no recibir la prop doctorsData
+  const initialDoctors = doctorsData || [
+    { id: 1, name: 'Dr. Denis Raj', specialty: 'Dentist' },
+    { id: 2, name: 'Dr. Michael Smith', specialty: 'General Physician' },
+    { id: 3, name: 'Dr. Laura Taylor', specialty: 'General Physician' }
+  ];
+
+  const [reviews, setReviews] = useState({});
+  const [activeDoctor, setActiveDoctor] = useState(null);
   const [showWarning, setShowWarning] = useState(false);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     review: '',
     rating: 0
   });
 
-  const handleButtonClick = () => {
-    setShowForm(true);
+  const handleOpenForm = (doctor) => {
+    setActiveDoctor(doctor);
+    setFormData({ name: '', review: '', rating: 0 });
+    setShowWarning(false);
   };
 
   const handleChange = (e) => {
@@ -27,10 +35,16 @@ function ReviewForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.name.trim() && formData.review.trim() && formData.rating > 0) {
-      setSubmittedMessage(formData);
-      setShowForm(false);
+      setReviews((prev) => ({
+        ...prev,
+        [activeDoctor.id]: {
+          name: formData.name,
+          review: formData.review,
+          rating: formData.rating
+        }
+      }));
+      setActiveDoctor(null);
       setShowWarning(false);
-      setIsButtonDisabled(true);
     } else {
       setShowWarning(true);
     }
@@ -51,30 +65,38 @@ function ReviewForm() {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Dr. Denis Raj</td>
-            <td>Dentist</td>
-            <td>
-              <button 
-                className="btn-give-review" 
-                onClick={handleButtonClick}
-                disabled={isButtonDisabled}
-              >
-                {isButtonDisabled ? 'Submitted' : 'Click Here'}
-              </button>
-            </td>
-            <td>
-              {submittedMessage ? submittedMessage.review : 'No review given yet'}
-            </td>
-          </tr>
+          {initialDoctors.map((doc, index) => {
+            const hasReview = reviews[doc.id];
+            return (
+              <tr key={doc.id}>
+                <td>{index + 1}</td>
+                <td>{doc.name}</td>
+                <td>{doc.specialty}</td>
+                <td>
+                  <button
+                    className="btn-give-review"
+                    onClick={() => handleOpenForm(doc)}
+                    disabled={!!hasReview}
+                  >
+                    {hasReview ? 'Submitted' : 'Click Here'}
+                  </button>
+                </td>
+                <td>
+                  {hasReview ? hasReview.review : 'No review given yet'}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
 
-      {showForm && (
+      {activeDoctor && (
         <div className="modal-overlay">
           <form onSubmit={handleSubmit} className="feedback-form">
-            <h3>Give Your Feedback</h3>
+            <h3>Give Your Feedback for {activeDoctor.name}</h3>
+            <p style={{ margin: '0 0 1rem 0', color: '#666', fontSize: '0.9rem' }}>
+              Specialty: <strong>{activeDoctor.specialty}</strong>
+            </p>
 
             {showWarning && (
               <p className="warning-msg">Please fill out all fields including rating.</p>
@@ -121,24 +143,15 @@ function ReviewForm() {
 
             <div className="form-actions">
               <button type="submit" className="btn-submit">Submit</button>
-              <button 
-                type="button" 
-                className="btn-cancel" 
-                onClick={() => setShowForm(false)}
+              <button
+                type="button"
+                className="btn-cancel"
+                onClick={() => setActiveDoctor(null)}
               >
                 Cancel
               </button>
             </div>
           </form>
-        </div>
-      )}
-
-      {submittedMessage && (
-        <div className="submitted-feedback-card">
-          <h3>Submitted Feedback:</h3>
-          <p><strong>Name:</strong> {submittedMessage.name}</p>
-          <p><strong>Review:</strong> {submittedMessage.review}</p>
-          <p><strong>Rating:</strong> {'★'.repeat(submittedMessage.rating)}</p>
         </div>
       )}
     </div>
