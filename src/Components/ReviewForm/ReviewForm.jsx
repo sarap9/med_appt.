@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import './ReviewForm.css';
 
@@ -20,13 +21,19 @@ function ReviewForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Función para manejar el clic en las estrellas y actualizar el rating
+  const handleStarClick = (ratingValue) => {
+    setFormData({ ...formData, rating: ratingValue });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.name.trim() && formData.review.trim() && Number(formData.rating) > 0) {
+    // Validación: campos no vacíos y rating > 0
+    if (formData.name.trim() && formData.review.trim() && formData.rating > 0) {
       setSubmittedMessage(formData);
       setShowForm(false);
       setShowWarning(false);
-      setIsButtonDisabled(true);
+      setIsButtonDisabled(true); // Deshabilitar el botón después de enviar
     } else {
       setShowWarning(true);
     }
@@ -78,21 +85,22 @@ function ReviewForm() {
             />
           </div>
 
-          <div className="form-group">
+          {/* Selector de calificación interactivo con estrellas */}
+          <div className="form-group star-rating-container">
             <label htmlFor="rating">Rating (1 to 5):</label>
-            <select
-              id="rating"
-              name="rating"
-              value={formData.rating}
-              onChange={handleChange}
-            >
-              <option value="0">Select Rating</option>
-              <option value="1">1 ★ - Poor</option>
-              <option value="2">2 ★★ - Fair</option>
-              <option value="3">3 ★★★ - Good</option>
-              <option value="4">4 ★★★★ - Very Good</option>
-              <option value="5">5 ★★★★★ - Excellent</option>
-            </select>
+            <div className="star-rating">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <span
+                  key={star}
+                  className={`star ${formData.rating >= star ? 'filled' : ''}`}
+                  onClick={() => handleStarClick(star)}
+                >
+                  &#9733; {/* Código HTML para una estrella rellena: ★ */}
+                </span>
+              ))}
+            </div>
+            {/* Campo oculto para asegurar que la calificación sea parte del formulario enviado */}
+            <input type="hidden" name="rating" value={formData.rating} />
           </div>
 
           <button type="submit" className="btn-submit">Submit</button>
@@ -104,7 +112,7 @@ function ReviewForm() {
           <h3>Submitted Feedback:</h3>
           <p><strong>Name:</strong> {submittedMessage.name}</p>
           <p><strong>Review:</strong> {submittedMessage.review}</p>
-          <p><strong>Rating:</strong> {'★'.repeat(Number(submittedMessage.rating))}</p>
+          <p><strong>Rating:</strong> {'★'.repeat(submittedMessage.rating)}</p>
         </div>
       )}
     </div>

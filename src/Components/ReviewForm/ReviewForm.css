@@ -6,6 +6,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
+  text-align: center;
 }
 
 .btn-give-review {
@@ -49,8 +50,7 @@
 }
 
 .form-group input,
-.form-group textarea,
-.form-group select {
+.form-group textarea {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -72,4 +72,28 @@
   border-radius: 6px;
   background-color: #f0f8ff;
   text-align: left;
+}
+
+/* Estilos específicos para la selección de estrellas */
+.star-rating-container {
+  align-items: center;
+}
+
+.star-rating {
+  font-size: 2rem; /* Tamaño de las estrellas */
+  color: #ccc; /* Color de las estrellas no rellenas */
+}
+
+.star {
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.star.filled {
+  color: #ffc107; /* Color de las estrellas rellenas (amarillo) */
+}
+
+.star:hover,
+.star:hover ~ .star {
+  color: #ffc107; /* Efecto hover para las estrellas */
 }
