@@ -3,11 +3,13 @@ import './ReviewForm.css';
 
 function ReviewForm() {
   const [showForm, setShowForm] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [submittedMessage, setSubmittedMessage] = useState(null);
+  const [showWarning, setShowWarning] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     review: '',
-    rating: 0,
+    rating: 0
   });
 
   const handleButtonClick = () => {
@@ -15,88 +17,94 @@ function ReviewForm() {
   };
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.name && formData.review && formData.rating > 0) {
-      setSubmitted(true);
+    if (formData.name.trim() && formData.review.trim() && Number(formData.rating) > 0) {
+      setSubmittedMessage(formData);
+      setShowForm(false);
+      setShowWarning(false);
+      setIsButtonDisabled(true);
+    } else {
+      setShowWarning(true);
     }
   };
 
   return (
-    <div className="review-container">
-      <h2>Reviews & Feedback</h2>
-      
-      {!showForm ? (
-        <div className="review-intro">
-          <p>Please share your feedback regarding your recent consultation.</p>
-          <button className="btn-feedback" onClick={handleButtonClick}>
-            Click Here to Give Feedback
-          </button>
-        </div>
-      ) : (
-        <div className="review-form-wrapper">
-          {submitted ? (
-            <div className="review-success">
-              <h3>Thank you for your feedback!</h3>
-              <p><strong>Name:</strong> {formData.name}</p>
-              <p><strong>Feedback:</strong> {formData.review}</p>
-              <p><strong>Rating:</strong> {'★'.repeat(formData.rating)}</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="review-form">
-              <h3>Consultation Feedback</h3>
-              
-              <div className="form-group">
-                <label htmlFor="name">Name:</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+    <div className="review-form-container">
+      <h2>Consultation Reviews</h2>
 
-              <div className="form-group">
-                <label htmlFor="review">Review:</label>
-                <textarea
-                  id="review"
-                  name="review"
-                  rows="4"
-                  value={formData.review}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+      {!showForm && (
+        <button 
+          className="btn-give-review" 
+          onClick={handleButtonClick}
+          disabled={isButtonDisabled}
+        >
+          {isButtonDisabled ? 'Feedback Submitted' : 'Click Here to Give Feedback'}
+        </button>
+      )}
 
-              <div className="form-group">
-                <label htmlFor="rating">Rating (1 to 5):</label>
-                <select
-                  id="rating"
-                  name="rating"
-                  value={formData.rating}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="0">Select Rating</option>
-                  <option value="1">1 - Poor</option>
-                  <option value="2">2 - Fair</option>
-                  <option value="3">3 - Good</option>
-                  <option value="4">4 - Very Good</option>
-                  <option value="5">5 - Excellent</option>
-                </select>
-              </div>
+      {showForm && (
+        <form onSubmit={handleSubmit} className="feedback-form">
+          <h3>Give Your Feedback</h3>
 
-              <button type="submit" className="btn-submit">Submit Feedback</button>
-            </form>
+          {showWarning && (
+            <p className="warning-msg">Please fill out all fields including rating.</p>
           )}
+
+          <div className="form-group">
+            <label htmlFor="name">Name:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Enter your name"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="review">Review:</label>
+            <textarea
+              id="review"
+              name="review"
+              rows="4"
+              value={formData.review}
+              onChange={handleChange}
+              placeholder="Write your review here..."
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="rating">Rating (1 to 5):</label>
+            <select
+              id="rating"
+              name="rating"
+              value={formData.rating}
+              onChange={handleChange}
+            >
+              <option value="0">Select Rating</option>
+              <option value="1">1 ★ - Poor</option>
+              <option value="2">2 ★★ - Fair</option>
+              <option value="3">3 ★★★ - Good</option>
+              <option value="4">4 ★★★★ - Very Good</option>
+              <option value="5">5 ★★★★★ - Excellent</option>
+            </select>
+          </div>
+
+          <button type="submit" className="btn-submit">Submit</button>
+        </form>
+      )}
+
+      {submittedMessage && (
+        <div className="submitted-feedback-card">
+          <h3>Submitted Feedback:</h3>
+          <p><strong>Name:</strong> {submittedMessage.name}</p>
+          <p><strong>Review:</strong> {submittedMessage.review}</p>
+          <p><strong>Rating:</strong> {'★'.repeat(Number(submittedMessage.rating))}</p>
         </div>
       )}
     </div>
