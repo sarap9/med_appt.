@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import './ReviewForm.css';
 
@@ -21,90 +20,117 @@ function ReviewForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Función para manejar el clic en las estrellas y actualizar el rating
   const handleStarClick = (ratingValue) => {
     setFormData({ ...formData, rating: ratingValue });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Validación: campos no vacíos y rating > 0
     if (formData.name.trim() && formData.review.trim() && formData.rating > 0) {
       setSubmittedMessage(formData);
       setShowForm(false);
       setShowWarning(false);
-      setIsButtonDisabled(true); // Deshabilitar el botón después de enviar
+      setIsButtonDisabled(true);
     } else {
       setShowWarning(true);
     }
   };
 
   return (
-    <div className="review-form-container">
-      <h2>Consultation Reviews</h2>
+    <div className="review-container">
+      <h2>Reviews and Feedback</h2>
 
-      {!showForm && (
-        <button 
-          className="btn-give-review" 
-          onClick={handleButtonClick}
-          disabled={isButtonDisabled}
-        >
-          {isButtonDisabled ? 'Feedback Submitted' : 'Click Here to Give Feedback'}
-        </button>
-      )}
+      <table className="review-table">
+        <thead>
+          <tr>
+            <th>Serial No.</th>
+            <th>Doctor Name</th>
+            <th>Doctor Specialty</th>
+            <th>Provide Feedback</th>
+            <th>Review Given</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Dr. Denis Raj</td>
+            <td>Dentist</td>
+            <td>
+              <button 
+                className="btn-give-review" 
+                onClick={handleButtonClick}
+                disabled={isButtonDisabled}
+              >
+                {isButtonDisabled ? 'Submitted' : 'Click Here'}
+              </button>
+            </td>
+            <td>
+              {submittedMessage ? submittedMessage.review : 'No review given yet'}
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="feedback-form">
-          <h3>Give Your Feedback</h3>
+        <div className="modal-overlay">
+          <form onSubmit={handleSubmit} className="feedback-form">
+            <h3>Give Your Feedback</h3>
 
-          {showWarning && (
-            <p className="warning-msg">Please fill out all fields including rating.</p>
-          )}
+            {showWarning && (
+              <p className="warning-msg">Please fill out all fields including rating.</p>
+            )}
 
-          <div className="form-group">
-            <label htmlFor="name">Name:</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter your name"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="review">Review:</label>
-            <textarea
-              id="review"
-              name="review"
-              rows="4"
-              value={formData.review}
-              onChange={handleChange}
-              placeholder="Write your review here..."
-            />
-          </div>
-
-          {/* Selector de calificación interactivo con estrellas */}
-          <div className="form-group star-rating-container">
-            <label htmlFor="rating">Rating (1 to 5):</label>
-            <div className="star-rating">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <span
-                  key={star}
-                  className={`star ${formData.rating >= star ? 'filled' : ''}`}
-                  onClick={() => handleStarClick(star)}
-                >
-                  &#9733; {/* Código HTML para una estrella rellena: ★ */}
-                </span>
-              ))}
+            <div className="form-group">
+              <label htmlFor="name">Name:</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your name"
+              />
             </div>
-            {/* Campo oculto para asegurar que la calificación sea parte del formulario enviado */}
-            <input type="hidden" name="rating" value={formData.rating} />
-          </div>
 
-          <button type="submit" className="btn-submit">Submit</button>
-        </form>
+            <div className="form-group">
+              <label htmlFor="review">Review:</label>
+              <textarea
+                id="review"
+                name="review"
+                rows="4"
+                value={formData.review}
+                onChange={handleChange}
+                placeholder="Write your review here..."
+              />
+            </div>
+
+            <div className="form-group star-rating-container">
+              <label>Rating (1 to 5):</label>
+              <div className="star-rating">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span
+                    key={star}
+                    className={`star ${formData.rating >= star ? 'filled' : ''}`}
+                    onClick={() => handleStarClick(star)}
+                  >
+                    &#9733;
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="form-actions">
+              <button type="submit" className="btn-submit">Submit</button>
+              <button 
+                type="button" 
+                className="btn-cancel" 
+                onClick={() => setShowForm(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
       )}
 
       {submittedMessage && (
