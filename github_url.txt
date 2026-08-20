@@ -1,0 +1,1 @@
+https://github.com/sarap9/med_appt./blob/main/src/Components/ProfileCard/ProfileCard.jsx
