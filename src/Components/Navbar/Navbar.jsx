@@ -5,6 +5,7 @@ import './Navbar.css';
 const Navbar = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userName, setUserName] = useState('');
+    const [showDropdown, setShowDropdown] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -34,8 +35,13 @@ const Navbar = () => {
 
         setIsLoggedIn(false);
         setUserName('');
+        setShowDropdown(false);
         navigate('/login');
         window.location.reload();
+    };
+
+    const toggleDropdown = () => {
+        setShowDropdown((prev) => !prev);
     };
 
     return (
@@ -51,16 +57,48 @@ const Navbar = () => {
                     <Link to="/appointments">Appointments</Link>
                 </li>
                 {isLoggedIn ? (
-                    <>
-                        <li className="user-welcome-text" style={{ marginRight: '15px', fontWeight: 'bold' }}>
-                            Welcome, {userName}
-                        </li>
-                        <li>
-                            <button onClick={handleLogout} className="btn-logout">
-                                Logout
-                            </button>
-                        </li>
-                    </>
+                    <li className="user-dropdown-container" style={{ position: 'relative' }}>
+                        <span 
+                            onClick={toggleDropdown} 
+                            className="user-welcome-text" 
+                            style={{ cursor: 'pointer', fontWeight: 'bold', padding: '0.5rem 1rem' }}
+                        >
+                            Welcome, {userName} ▼
+                        </span>
+                        {showDropdown && (
+                            <ul className="dropdown-menu" style={{
+                                position: 'absolute',
+                                top: '100%',
+                                right: 0,
+                                backgroundColor: '#ffffff',
+                                boxShadow: '0px 4px 8px rgba(0,0,0,0.1)',
+                                listStyle: 'none',
+                                padding: '0.5rem 0',
+                                borderRadius: '4px',
+                                minWidth: '150px',
+                                zIndex: 1000
+                            }}>
+                                <li style={{ padding: '0.5rem 1rem' }}>
+                                    <Link 
+                                        to="/profile" 
+                                        onClick={() => setShowDropdown(false)}
+                                        style={{ textDecoration: 'none', color: '#333', display: 'block' }}
+                                    >
+                                        Your Profile
+                                    </Link>
+                                </li>
+                                <li style={{ padding: '0.5rem 1rem', borderTop: '1px solid #eee' }}>
+                                    <button 
+                                        onClick={handleLogout} 
+                                        className="btn-logout"
+                                        style={{ background: 'none', border: 'none', color: '#e74c3c', cursor: 'pointer', padding: 0, width: '100%', textAlign: 'left' }}
+                                    >
+                                        Logout
+                                    </button>
+                                </li>
+                            </ul>
+                        )}
+                    </li>
                 ) : (
                     <>
                         <li>
