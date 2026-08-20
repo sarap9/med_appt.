@@ -5,10 +5,7 @@ import Notification from './Components/Notification/Notification';
 import InstantConsultation from './Components/InstantConsultationBooking/InstantConsultation';
 import ReviewForm from './Components/ReviewForm/ReviewForm';
 import ProfileCard from './Components/ProfileCard/ProfileCard';
-// Descomenta e importa estos componentes si existen en tu proyecto:
-// import SignUp from './Components/SignUp/SignUp';
-// import Login from './Components/Login/Login';
-
+import ReportsLayout from './Components/ReportsLayout/ReportsLayout';
 import 'reactjs-popup/dist/index.css';
 
 function App() {
@@ -45,10 +42,7 @@ function App() {
             <Route path="/appointments" element={<InstantConsultation />} />
             <Route path="/reviews" element={<ReviewForm doctorsData={doctorsData} />} />
             <Route path="/profile" element={<ProfileCard />} />
-            
-            {/* Rutas adicionales de autenticación si las requieres */}
-            {/* <Route path="/signup" element={<SignUp />} /> */}
-            {/* <Route path="/login" element={<Login />} /> */}
+            <Route path="/reports" element={<ReportsLayout />} />
           </Routes>
         </div>
       </Notification>
