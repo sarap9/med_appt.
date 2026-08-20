@@ -3,22 +3,30 @@ import './ProfileCard.css';
 
 function ProfileCard() {
   const [userDetails, setUserDetails] = useState({
-    name: 'John Doe',
-    email: 'johndoe@example.com',
+    name: 'Usuario Demo',
+    email: 'usuario@ejemplo.com',
     phone: '+1 234 567 890'
   });
 
   useEffect(() => {
-    const storedName = sessionStorage.getItem('name');
-    const storedEmail = sessionStorage.getItem('email');
-    const storedPhone = sessionStorage.getItem('phone');
+    // Al cargar la página, intenta recuperar los datos reales de la sesión
+    const storedEmail = sessionStorage.getItem('email') || localStorage.getItem('email');
+    const storedName = sessionStorage.getItem('name') || localStorage.getItem('name');
+    const storedPhone = sessionStorage.getItem('phone') || localStorage.getItem('phone');
 
-    if (storedName || storedEmail || storedPhone) {
+    // Si existen datos reales en el almacenamiento, actualiza el estado; si no, mantiene los de prueba
+    if (storedEmail || storedName || storedPhone) {
       setUserDetails({
-        name: storedName || 'John Doe',
-        email: storedEmail || 'johndoe@example.com',
+        name: storedName || (storedEmail ? storedEmail.split('@')[0] : 'Usuario Demo'),
+        email: storedEmail || 'usuario@ejemplo.com',
         phone: storedPhone || '+1 234 567 890'
       });
+    } else {
+      // Guarda valores por defecto automáticamente para que toda la App reconozca la sesión activa
+      sessionStorage.setItem('auth-token', 'token_demo_inicial');
+      sessionStorage.setItem('email', 'usuario@ejemplo.com');
+      sessionStorage.setItem('name', 'Usuario Demo');
+      sessionStorage.setItem('phone', '+1 234 567 890');
     }
   }, []);
 
