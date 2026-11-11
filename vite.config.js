@@ -1,13 +1,15 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  base: './',
   server: {
+    port: 8888,
     host: true,
-    port: 3000, // O el puerto estándar que use tu app
-    hmr: {
-      clientPort: 443, // Fuerza el uso de HTTPS estándar para evitar bloqueos de WebSocket en el proxy
-    },
   },
-});
+  preview: {
+    port: 8888,
+    host: true,
+  }
+})
